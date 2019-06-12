@@ -5,6 +5,7 @@
  */
 package lt.viko.eif.finalproject.resources;
 
+import com.google.maps.model.PlacesSearchResult;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -17,6 +18,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import lt.viko.eif.finalproject.api.GoogleAPIClient;
 import lt.viko.eif.finalproject.bmi.BMI;
 
 /**
@@ -49,7 +51,10 @@ public class LocationResource {
         stringai.add("b");
         //new GenericEntity < List<String>> (stringai){}
         BMI bmi = new BMI (5000, 1.8);
-         return Response.status(200).entity(bmi.getCategoryName()).build();
+        GoogleAPIClient gog = new  GoogleAPIClient();
+        
+        // return Response.status(200).entity(bmi.getCategoryName()).build();
+         return Response.status(200).entity(gog.findNearbyPlace()).build();
     }
 
     /**
