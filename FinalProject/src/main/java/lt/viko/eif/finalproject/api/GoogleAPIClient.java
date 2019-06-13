@@ -22,6 +22,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import lt.viko.eif.finalproject.models.User;
 
 /**
  *
@@ -29,7 +30,7 @@ import javax.ws.rs.core.MediaType;
  */
 public class GoogleAPIClient {
     
-    private static final String apiKey = "AIzaSyCYZNxZULfdBv3R9m3wDyS4wlq1dvIBYKk";
+    private static final String apiKey = "AIzaSyD_wwGcgZy85oMJoqPwzd0gGVRh10yZS8Y";
     
     public String response (){
         Client client = ClientBuilder.newClient();
@@ -58,16 +59,17 @@ FindPlaceFromTextRequest.FieldMask.GEOMETRY)
       return result;
     }
     
-    public  PlacesSearchResult[] findNearbyPlace () throws ApiException, InterruptedException, IOException {
+    public  PlacesSearchResult[] findNearbyPlace (double lat, double lng, PlaceType placetType) throws ApiException, InterruptedException, IOException {
         GeoApiContext context = new GeoApiContext.Builder()
     .apiKey(apiKey)
+                .disableRetries()
     .build();
         // location 
-      LatLng location = new LatLng(54.717177, 25.297325);
-      
+      //LatLng location = new LatLng(54.717177, 25.297325);
+      LatLng location = new LatLng(lat, lng);
         PlacesSearchResponse result = PlacesApi.nearbySearchQuery(context, location)
           //.radius(5000)
-          .type(PlaceType.DOCTOR)
+          .type(placetType)
           .rankby(RankBy.DISTANCE)
           .await();
         

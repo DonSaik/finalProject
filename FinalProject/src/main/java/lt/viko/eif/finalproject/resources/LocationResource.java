@@ -5,7 +5,11 @@
  */
 package lt.viko.eif.finalproject.resources;
 
+import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -13,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.GenericEntity;
@@ -20,18 +25,27 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import lt.viko.eif.finalproject.api.GoogleAPIClient;
 import lt.viko.eif.finalproject.bmi.BMI;
+import lt.viko.eif.finalproject.dataaccess.FinalProjectDatabase;
+import lt.viko.eif.finalproject.dataaccess.LogDao;
+import lt.viko.eif.finalproject.dataaccess.UserDao;
+import lt.viko.eif.finalproject.models.Log;
+import lt.viko.eif.finalproject.models.User;
 
 /**
  * REST Web Service
  *
  * @author donatas
  */
-@Path("location")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Path("")
 public class LocationResource {
 
     @Context
     private UriInfo context;
-
+    
+    private UserDao userDao = new FinalProjectDatabase().getUserDao();
+    private LogDao logDao = new FinalProjectDatabase().getLogDao();
     /**
      * Creates a new instance of LocationResource
      */
@@ -43,9 +57,10 @@ public class LocationResource {
      * @return an instance of java.lang.String
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    
     public Response getJson() throws Exception {
         //TODO return proper representation object
+        /*
         List<String> stringai = new ArrayList<>();
         stringai.add("a");
         stringai.add("b");
@@ -54,15 +69,69 @@ public class LocationResource {
         GoogleAPIClient gog = new  GoogleAPIClient();
         
         // return Response.status(200).entity(bmi.getCategoryName()).build();
-         return Response.status(200).entity(gog.findNearbyPlace()).build();
+         return Response.status(200).entity(gog.findNearbyPlace()).build();*/
+        
+        /*
+        User user = new User(Integer.SIZE, 54.717177, 25.297325, 75, 1.8);
+        
+          List <PlaceType> activities = new ArrayList<>();
+            activities.add(PlaceType.BAR);
+            activities.add(PlaceType.CAFE);
+            
+            Log log = new Log();
+            BMI bmi = new BMI(user.getMass(), user.getHeight());
+            log.setUserCategory(bmi.getCategoryName());
+            log.setBMIIndex(bmi.getBmiIndex());
+            GoogleAPIClient gog = new  GoogleAPIClient();
+            PlacesSearchResult result;
+            for (PlaceType activity : activities) {
+               result =  gog.findNearbyPlace (user.getLat(), user.getLng(), activity)[0];
+               log.setPlaceName(result.name);
+               log.setPlaceType(activity.toString());
+               log.setAddress(result.vicinity.substring(result.vicinity.lastIndexOf(", ")).trim());
+               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")));
+            }
+            user.getLogList().add(log);
+
+            return Response.status(201).entity(user).build();*/
+        return Response.status(201).build();
     }
 
     /**
      * PUT method for updating or creating an instance of LocationResource
      * @param content representation for the resource
      */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
+    @POST
+    public Response putJson(User user) throws Exception {
+        System.out.println(user.toString());
+            
+            List <PlaceType> activities = new ArrayList<>();
+            activities.add(PlaceType.BAR);
+            activities.add(PlaceType.CAFE);
+            
+            user.setLogList(new ArrayList<Log>());
+            BMI bmi = new BMI(user.getMass(), user.getHeight());
+            user.setCategory(bmi.getCategoryName());
+            user.setBmi(new BigDecimal(bmi.getBmiIndex()).setScale(2, RoundingMode.HALF_UP));
+            
+            GoogleAPIClient gog = new  GoogleAPIClient();
+            PlacesSearchResult result;
+            
+            for (PlaceType activity : activities) {
+               result =  gog.findNearbyPlace(user.getLat(), user.getLng(), activity)[0];
+               Log log = new Log();
+               log.setUser(user);
+               log.setOpeningHours(result.openingHours);
+               log.setPlaceName(result.name);
+               log.setPlaceType(activity.toString());
+               log.setAddress(result.vicinity.substring(0, result.vicinity.lastIndexOf(", ")+2));
+               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")-2));
+               user.getLogList().add(log);
+            }
+            userDao.addUser(user);
+             for (Log log: user.getLogList()){
+                 logDao.addLog(log);
+             }
+            return Response.status(201).entity(user).build();
     }
 }

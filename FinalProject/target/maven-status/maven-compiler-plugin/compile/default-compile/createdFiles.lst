@@ -1,4 +1,15 @@
+lt/viko/eif/finalproject/api/GoogleAPIClient.class
+lt/viko/eif/finalproject/dataaccess/DaoFactory.class
+lt/viko/eif/finalproject/dataaccess/UserDao.class
+lt/viko/eif/finalproject/dataaccess/FinalProjectDatabase.class
+lt/viko/eif/finalproject/resources/UsersResource.class
+lt/viko/eif/finalproject/resources/LogsResource.class
 lt/viko/eif/finalproject/resources/LocationResource.class
+lt/viko/eif/finalproject/models/Log.class
+lt/viko/eif/finalproject/dataaccess/LogDao.class
+lt/viko/eif/finalproject/dataaccess/LogDaoImpl.class
 lt/viko/eif/finalproject/bmi/BMI.class
 lt/viko/eif/finalproject/resources/ApplicationConfig.class
-lt/viko/eif/finalproject/api/GoogleAPIClient.class
+.netbeans_automatic_build
+lt/viko/eif/finalproject/dataaccess/UserDaoImpl.class
+lt/viko/eif/finalproject/models/User.class

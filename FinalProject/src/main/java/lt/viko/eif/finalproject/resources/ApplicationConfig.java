@@ -12,7 +12,7 @@ import javax.ws.rs.core.Application;
  *
  * @author donatas
  */
-@javax.ws.rs.ApplicationPath("webresources")
+@javax.ws.rs.ApplicationPath("api")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -30,6 +30,8 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(lt.viko.eif.finalproject.resources.LocationResource.class);
+        resources.add(lt.viko.eif.finalproject.resources.LogsResource.class);
+        resources.add(lt.viko.eif.finalproject.resources.UsersResource.class);
     }
     
 }

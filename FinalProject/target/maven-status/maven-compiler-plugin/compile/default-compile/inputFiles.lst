@@ -1,4 +1,14 @@
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/UserDaoImpl.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/models/User.java
 /home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/api/GoogleAPIClient.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/models/Log.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/UserDao.java
 /home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/LocationResource.java
 /home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/bmi/BMI.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/DaoFactory.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/LogDaoImpl.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/UsersResource.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/LogDao.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/LogsResource.java
+/home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/FinalProjectDatabase.java
 /home/donatas/NetBeansProjects/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/ApplicationConfig.java
