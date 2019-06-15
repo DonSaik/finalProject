@@ -10,6 +10,5 @@ lt/viko/eif/finalproject/dataaccess/LogDao.class
 lt/viko/eif/finalproject/dataaccess/LogDaoImpl.class
 lt/viko/eif/finalproject/bmi/BMI.class
 lt/viko/eif/finalproject/resources/ApplicationConfig.class
-.netbeans_automatic_build
 lt/viko/eif/finalproject/dataaccess/UserDaoImpl.class
 lt/viko/eif/finalproject/models/User.class

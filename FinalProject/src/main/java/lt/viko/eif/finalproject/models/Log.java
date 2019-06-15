@@ -6,6 +6,7 @@
 package lt.viko.eif.finalproject.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lt.viko.eif.finalproject.models.User;
 import java.io.Serializable;
@@ -62,9 +63,10 @@ public class Log implements Serializable {
     private String placeName;
     @JoinColumn(name = "UserID", referencedColumnName = "Id")
     @ManyToOne(optional = false)
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private User user;
     
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private OpeningHours openingHours;
 
     public void setOpeningHours(OpeningHours openingHours) {
@@ -136,11 +138,9 @@ public class Log implements Serializable {
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
     }
-    @JsonIgnore
     public User getUser() {
         return user;
     }
-    @JsonProperty
     public void setUser(User user) {
         this.user = user;
     }

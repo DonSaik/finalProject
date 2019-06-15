@@ -5,8 +5,12 @@
  */
 package lt.viko.eif.finalproject.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.maps.model.PlaceType;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -68,8 +72,10 @@ public class User implements Serializable {
     @Column(name = "Category")
     private String category;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonInclude(Include.NON_NULL)
     private List<Log> logList;
-
+    
+    private List <PlaceType> activities = new ArrayList<>();
     public User() {
     }
 

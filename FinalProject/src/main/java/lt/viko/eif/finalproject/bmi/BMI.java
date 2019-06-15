@@ -5,6 +5,9 @@
  */
 package lt.viko.eif.finalproject.bmi;
 
+import com.google.maps.model.PlaceType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +19,15 @@ public class BMI {
     private double height;
     private double weight;
     private double bmiIndex = -1;
+    private List <PlaceType> activities;
+
+    public void setActivities(List<PlaceType> activities) {
+        this.activities = activities;
+    }
+
+    public List<PlaceType> getActivities() {
+        return activities;
+    }
     private static final double indexCategoryMatrix [][] = {
         {0, 15},
         {15, 16},
@@ -38,7 +50,7 @@ public class BMI {
     
     public static double bmiIndexCalculator(double height, double weight) throws Exception{
         double index = weight / (height * height);
-        if (index <0 || index >100) throw new Exception("Error. Bad height or weight");
+        if (index <5 || index >250) throw new Exception("Error. Bad height or weight");
         else return index;
     }
     
@@ -50,19 +62,31 @@ public class BMI {
         catch (Exception e) {
             throw e;
         }
-        
-        if (bmiIndex >= indexCategoryMatrix[0][0] && bmiIndex < indexCategoryMatrix[0][1] )
-            return "Very severely underweight";
-        else if (bmiIndex >= indexCategoryMatrix[1][0] && bmiIndex < indexCategoryMatrix[1][1])
-            return "Severely underweight";
-        else if (bmiIndex >= indexCategoryMatrix[2][0] && bmiIndex < indexCategoryMatrix[2][1])
-            return "Underwight";
-        else if (bmiIndex >= indexCategoryMatrix[3][0] && bmiIndex < indexCategoryMatrix[3][1])
-            return "Normal (healthy weight)";
-        else if (bmiIndex >= indexCategoryMatrix[4][0] && bmiIndex < indexCategoryMatrix[4][1])
-            return "Overweight";
-        else if (bmiIndex >= indexCategoryMatrix[5][0] && bmiIndex < indexCategoryMatrix[5][1])
-            return "Obese";
+        activities = new ArrayList<>();
+        if (bmiIndex >= indexCategoryMatrix[0][0] && bmiIndex < indexCategoryMatrix[0][1] ){
+            activities.add(PlaceType.CAFE);
+            activities.add(PlaceType.RESTAURANT);
+            return "Very severely underweight";}
+        else if (bmiIndex >= indexCategoryMatrix[1][0] && bmiIndex < indexCategoryMatrix[1][1]){
+            activities.add(PlaceType.CAFE);
+            activities.add(PlaceType.RESTAURANT);
+            return "Severely underweight";}
+        else if (bmiIndex >= indexCategoryMatrix[2][0] && bmiIndex < indexCategoryMatrix[2][1]){
+            activities.add(PlaceType.CAFE);
+            activities.add(PlaceType.RESTAURANT);
+            return "Underwight";}
+        else if (bmiIndex >= indexCategoryMatrix[3][0] && bmiIndex < indexCategoryMatrix[3][1]){
+            activities.add(PlaceType.AQUARIUM);
+            activities.add(PlaceType.STORE);
+            return "Normal (healthy weight)";}
+        else if (bmiIndex >= indexCategoryMatrix[4][0] && bmiIndex < indexCategoryMatrix[4][1]){
+            activities.add(PlaceType.GYM);
+            activities.add(PlaceType.BICYCLE_STORE);
+            return "Overweight";}
+        else if (bmiIndex >= indexCategoryMatrix[5][0] && bmiIndex < indexCategoryMatrix[5][1]){
+            activities.add(PlaceType.BICYCLE_STORE);
+            activities.add(PlaceType.GYM);
+            return "Obese";}
    
         return null;
     }
@@ -70,4 +94,5 @@ public class BMI {
     public double getBmiIndex() {
         return bmiIndex;
     }
+    
 }

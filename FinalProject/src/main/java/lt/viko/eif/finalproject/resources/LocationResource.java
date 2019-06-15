@@ -116,21 +116,24 @@ public class LocationResource {
             
             GoogleAPIClient gog = new  GoogleAPIClient();
             PlacesSearchResult result;
-            
-            for (PlaceType activity : activities) {
+            String vicinity = "";
+            for (PlaceType activity : bmi.getActivities()) {
                result =  gog.findNearbyPlace(user.getLat(), user.getLng(), activity)[0];
                Log log = new Log();
-               log.setUser(user);
-               log.setOpeningHours(result.openingHours);
                log.setPlaceName(result.name);
                log.setPlaceType(activity.toString());
-               log.setAddress(result.vicinity.substring(0, result.vicinity.lastIndexOf(", ")+2));
-               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")-2));
+               vicinity = result.vicinity;
+               log.setAddress(vicinity.substring(0, vicinity.lastIndexOf(", ")-2));
+               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")+2));
                user.getLogList().add(log);
+               result = null;
             }
-            userDao.addUser(user);
+            user = userDao.addUser(user);
+            System.out.print(""+user.getId());
              for (Log log: user.getLogList()){
+                 log.setUser(user);
                  logDao.addLog(log);
+                 log.setUser(null);
              }
             return Response.status(201).entity(user).build();
     }

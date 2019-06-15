@@ -30,7 +30,7 @@ import lt.viko.eif.finalproject.models.User;
  */
 public class GoogleAPIClient {
     
-    private static final String apiKey = "AIzaSyD_wwGcgZy85oMJoqPwzd0gGVRh10yZS8Y";
+    private static final String apiKey = "AIzaSyBdLXDzwGD3CfKjY32erXKfICVNHTQJ95c";
     
     public String response (){
         Client client = ClientBuilder.newClient();

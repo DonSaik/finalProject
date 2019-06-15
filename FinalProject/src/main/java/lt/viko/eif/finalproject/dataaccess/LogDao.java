@@ -18,5 +18,8 @@ public interface LogDao {
     Log getById(int id);
     Log addLog(Log log);
     boolean deleteLog(int id);
-    boolean updateLog(int id, Log log);   
+    boolean updateLog(int id, Log log);
+    List<Log> getFilteredLogs(String city, String address, String placeName, String placeType);
+    List<Log> getUserLogs(int userid);
+    Log getUserLogById(int userid, int logid);
 }

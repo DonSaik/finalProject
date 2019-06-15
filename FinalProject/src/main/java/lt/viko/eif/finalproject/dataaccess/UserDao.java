@@ -5,6 +5,7 @@
  */
 package lt.viko.eif.finalproject.dataaccess;
 
+import java.math.BigDecimal;
 import java.util.List;
 import lt.viko.eif.finalproject.models.User;
 
@@ -18,5 +19,6 @@ public interface UserDao {
     User getById(int id);
     User addUser(User user);
     boolean deleteUser(int id);
-    boolean updateUser (int id, User user);   
+    boolean updateUser (int id, User user);
+    List<User> getFilteredUsers(String category, double lat, double lng, double mass, double height, BigDecimal bmi);
 }

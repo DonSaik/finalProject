@@ -5,14 +5,17 @@
  */
 package lt.viko.eif.finalproject.resources;
 
+import java.math.BigDecimal;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import lt.viko.eif.finalproject.dataaccess.FinalProjectDatabase;
@@ -52,12 +55,13 @@ public class LogsResource {
     public Response getLogById(@PathParam("id") int id) throws Exception {
         return Response.status(201).entity(logDao.getById(id)).build();
     }
-
-    /**
-     * PUT method for updating or creating an instance of LogsResource
-     * @param content representation for the resource
-     */
-    @PUT
-    public void putJson(String content) {
+    @GET
+    @Path("/q")
+    public Response get(@QueryParam("city") String city, 
+            @QueryParam("address") String address, 
+            @QueryParam("placeName") String placeName, 
+            @QueryParam("placeType") String placeType) throws Exception {
+        System.out.println("Fetching user info by "+ city +" "+ address+" "+ placeName+" "+ placeType);
+        return Response.status(201).entity(logDao.getFilteredLogs(city, address, placeName, placeType)).build();
     }
 }
