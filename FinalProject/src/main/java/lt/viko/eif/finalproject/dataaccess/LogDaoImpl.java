@@ -100,35 +100,6 @@ public class LogDaoImpl implements LogDao{
     }
 
     @Override
-    public boolean deleteLog(int id)throws SQLException {
-        String query = "Delete from Recipe Where Recipe.Id = ?";
-        
-            Connection connection = FinalProjectDatabase.createConnection();
-            PreparedStatement preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setInt(1, id);
-            preparedStmt.executeUpdate();
-
-            connection.close();
-            return true;
-        
-    }
-
-
-    @Override
-    public boolean updateLog(int id, Log log) throws SQLException {
-        String query = "Update Recipe set Recipe.name= ? Where Recipe.Id = ? ";
-        
-            
-            Connection connection = FinalProjectDatabase.createConnection();
-            PreparedStatement preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setInt(2, id);
-            preparedStmt.setString(1, log.getAddress());
-            preparedStmt.executeUpdate();
-            connection.close();
-            return true;
-    }
-
-    @Override
     public List<Log> getUserLogs(int userid)throws SQLException {
         List <Log> allLogs = new ArrayList<>();
         String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "

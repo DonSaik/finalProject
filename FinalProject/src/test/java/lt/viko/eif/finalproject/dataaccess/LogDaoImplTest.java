@@ -67,20 +67,6 @@ public class LogDaoImplTest {
     }
 
     /**
-     * Test of deleteLog method, of class LogDaoImpl.
-     */
-    @Ignore
-    @Test
-    public void testDeleteLog()throws SQLException {
-        System.out.println("deleteLog");
-        int id = 0;
-        LogDaoImpl instance = new LogDaoImpl();
-        boolean expResult = false;
-        boolean result = instance.deleteLog(id);
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getUserLogs method, of class LogDaoImpl.
      */
     @Ignore

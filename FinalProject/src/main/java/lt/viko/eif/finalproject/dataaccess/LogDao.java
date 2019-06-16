@@ -18,8 +18,6 @@ public interface LogDao {
     List<Log> getAll() throws SQLException;
     Log getById(int id)throws SQLException;
     Log addLog(Log log)throws SQLException;
-    boolean deleteLog(int id)throws SQLException;
-    boolean updateLog(int id, Log log)throws SQLException;
     List<Log> getFilteredLogs(String city, String address, String placeName, String placeType)throws SQLException;
     List<Log> getUserLogs(int userid)throws SQLException;
     Log getUserLogById(int userid, int logid)throws SQLException;
