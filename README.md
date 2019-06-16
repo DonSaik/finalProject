@@ -1,5 +1,5 @@
 # Final Project
-Name:
+
 This api gets your bmi and suggests activities by its value. 
 Use Post method /FinalProject/api with body:
 {
