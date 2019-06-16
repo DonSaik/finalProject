@@ -12,6 +12,7 @@ import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -33,6 +34,7 @@ public class LogDaoImplTest {
     /**
      * Test of getById method, of class LogDaoImpl.
      */
+    @Ignore
     @Test
     public void testGetById() throws SQLException{
         System.out.println("getById");
@@ -67,6 +69,7 @@ public class LogDaoImplTest {
     /**
      * Test of deleteLog method, of class LogDaoImpl.
      */
+    @Ignore
     @Test
     public void testDeleteLog()throws SQLException {
         System.out.println("deleteLog");
@@ -80,6 +83,7 @@ public class LogDaoImplTest {
     /**
      * Test of getUserLogs method, of class LogDaoImpl.
      */
+    @Ignore
     @Test
     public void testGetUserLogs() throws SQLException{
         System.out.println("getUserLogs");
@@ -93,6 +97,7 @@ public class LogDaoImplTest {
     /**
      * Test of getUserLogById method, of class LogDaoImpl.
      */
+    @Ignore
     @Test
     public void testGetUserLogById() throws SQLException{
         System.out.println("getUserLogById");
@@ -107,6 +112,7 @@ public class LogDaoImplTest {
     /**
      * Test of getFilteredLogs method, of class LogDaoImpl.
      */
+    @Ignore
     @Test
     public void testGetFilteredLogs() throws SQLException{
         System.out.println("getFilteredLogs");

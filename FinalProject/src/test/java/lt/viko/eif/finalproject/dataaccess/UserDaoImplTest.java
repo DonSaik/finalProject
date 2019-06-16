@@ -12,6 +12,7 @@ import java.util.List;
 import lt.viko.eif.finalproject.models.User;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 
 /**
@@ -60,6 +61,7 @@ public class UserDaoImplTest {
     /**
      * Test of getFilteredUsers method, of class UserDaoImpl.
      */
+    @Ignore
     @Test
     public void testGetFilteredUsers() throws SQLException {
         System.out.println("getFilteredUsers");
