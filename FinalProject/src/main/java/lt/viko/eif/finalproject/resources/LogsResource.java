@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -51,7 +52,12 @@ public class LogsResource {
      */
     @GET
     public Response getJson() {
-        List<Log> logs = logDao.getAll();
+        List<Log> logs =null;
+        try{
+        logs = logDao.getAll();}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(logs).build();
+        }
         List<Link> links;
         for (Log log: logs){
             links = new ArrayList<>();
@@ -60,19 +66,25 @@ public class LogsResource {
             log.setLinks(links);
             log.setUser(null);
         }
-         return Response.status(201).entity(logs).build();
+         return Response.status(200).entity(logs).build();
     }
     @GET
     @Path("/{id}")
     public Response getLogById(@PathParam("id") int id) throws Exception {
-        Log log = logDao.getById(id);
+        Log log = null;
+        try{
+        log = logDao.getById(id);
+        }
+        catch (NotFoundException ex){
+            return Response.status(204).entity(log).build();
+        }
         List<Link> links;
             links = new ArrayList<>();
             links.add(new Link(getUriForUserLog(log), "self"));
             links.add(new Link(getUriForSelf(log.getUser()), "user"));
             log.setLinks(links);
             log.setUser(null);
-        return Response.status(201).entity(log).build();
+        return Response.status(200).entity(log).build();
     }
     @GET
     @Path("/q")
@@ -81,7 +93,14 @@ public class LogsResource {
             @QueryParam("placeName") String placeName, 
             @QueryParam("placeType") String placeType) throws Exception {
         System.out.println("Fetching user info by "+ city +" "+ address+" "+ placeName+" "+ placeType);
-        List<Log> logs = logDao.getFilteredLogs(city, address, placeName, placeType);
+        List<Log> logs =null;
+        try{
+        logs = logDao.getFilteredLogs(city, address, placeName, placeType);
+        }
+        catch (NotFoundException ex){
+            return Response.status(204).entity(logs).build();
+        }
+        
         List<Link> links;
         for (Log log: logs){
             links = new ArrayList<>();
@@ -90,7 +109,7 @@ public class LogsResource {
             log.setLinks(links);
             log.setUser(null);
         }
-        return Response.status(201).entity(logs).build();
+        return Response.status(200).entity(logs).build();
     }
     /**
      * Method to get link for self.

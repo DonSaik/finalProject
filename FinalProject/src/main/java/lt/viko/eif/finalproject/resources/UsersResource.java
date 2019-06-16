@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
@@ -54,7 +55,13 @@ public class UsersResource {
     @GET
     public Response getJson() throws Exception {
         System.out.println("Fetching all user info...");
-        List<User> users = userDao.getAll();
+        
+        List<User> users = null;
+        try{
+        users = userDao.getAll();}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(users).build();
+        }
         List<Link> links;
         for (User user: users){
             links = new ArrayList<>();
@@ -62,7 +69,7 @@ public class UsersResource {
             links.add(new Link(getUriForUsersLogs(user), "logs"));
             user.setLinks(links);
         }
-        return Response.status(201).entity(users).build();
+        return Response.status(200).entity(users).build();
     }
     
     @GET
@@ -74,7 +81,12 @@ public class UsersResource {
             @DefaultValue("0")@QueryParam("height") double height,
             @DefaultValue("0")@QueryParam("bmi") BigDecimal bmi) throws Exception {
         System.out.println("Fetching user info by "+ category  +" "+ lat+" "+ lng+" "+ mass+" "+ height+" "+ bmi);
-        List<User> users = userDao.getFilteredUsers( category, lat, lng, mass,  height, bmi);
+        List<User> users = null;
+        try{
+            users = userDao.getFilteredUsers( category, lat, lng, mass,  height, bmi);}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(users).build();
+        }
         List<Link> links;
         for (User user: users){
             links = new ArrayList<>();
@@ -82,12 +94,17 @@ public class UsersResource {
             links.add(new Link(getUriForUsersLogs(user), "logs"));
             user.setLinks(links);
         }
-        return Response.status(201).entity(users).build();
+        return Response.status(200).entity(users).build();
     }
     @GET
     @Path("{userid}/logs")
     public Response getLogsById(@PathParam("userid") int userid) throws Exception {
-        List<Log> logs = logDao.getUserLogs(userid);
+        List<Log> logs =null;
+        try{
+        logs = logDao.getUserLogs(userid);}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(logs).build();
+        }
         List<Link> links;
         for (Log log: logs){
             links = new ArrayList<>();
@@ -96,30 +113,40 @@ public class UsersResource {
             log.setLinks(links);
             log.setUser(null);
         }
-        return Response.status(201).entity(logs).build();
+        return Response.status(200).entity(logs).build();
     }
     @GET
     @Path("{userid}/logs/{id}")
     public Response getLogById(@PathParam("userid") int userid,@PathParam("id") int id) throws Exception {
-        Log log = logDao.getUserLogById(userid, id);
+        Log log =null;
+        try{
+        log = logDao.getUserLogById(userid, id);}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(log).build();
+        }
         List<Link> links;
             links = new ArrayList<>();
             links.add(new Link(getUriForUserLog(log), "self"));
             links.add(new Link(getUriForSelf(log.getUser()), "user"));
             log.setLinks(links);
             log.setUser(null);
-        return Response.status(201).entity(log).build();
+        return Response.status(200).entity(log).build();
     }
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") int id) throws Exception {
-        User user = userDao.getById(id);
+        User user = null;
+        try{
+            user =  userDao.getById(id);}
+        catch (NotFoundException ex){
+            return Response.status(204).entity(user).build();
+        }
         List<Link> links;
             links = new ArrayList<>();
             links.add(new Link(getUriForSelf(user), "self"));
             links.add(new Link(getUriForUsersLogs(user), "logs"));
             user.setLinks(links);
-        return Response.status(201).entity(user).build();
+        return Response.status(200).entity(user).build();
     }
     /**
      * Method to get link for self.

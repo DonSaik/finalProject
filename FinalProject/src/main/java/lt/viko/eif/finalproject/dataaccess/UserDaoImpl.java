@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.NotFoundException;
 import lt.viko.eif.finalproject.models.User;
 
 /**
@@ -45,6 +46,7 @@ public class UserDaoImpl implements UserDao{
         } catch (SQLException ex) {
             Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+         if (allUsers.isEmpty()) throw new NotFoundException("No user found");
         return allUsers;
     }
 
@@ -67,6 +69,7 @@ public class UserDaoImpl implements UserDao{
         } catch (SQLException ex) {
             Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (user == null) throw new NotFoundException("No user found");
         return user;
     }
 
@@ -183,6 +186,7 @@ public class UserDaoImpl implements UserDao{
         } catch (SQLException ex) {
             Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (allUsers.isEmpty()) throw new NotFoundException("No user found");
         return allUsers;
     }
 }

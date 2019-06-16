@@ -31,48 +31,17 @@ import lt.viko.eif.finalproject.resources.Link;
  *
  * @author donatas
  */
-@Entity
-@Table(name = "User")
-@NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "Id")
     private Integer id;
-    @Size(max = 255)
-    @Column(name = "Nick")
     private String nick;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Lat")
     private double lat;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Lng")
     private double lng;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Mass")
     private double mass;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "Height")
     private double height;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "BMI")
     private BigDecimal bmi;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "Category")
     private String category;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonInclude(Include.NON_NULL)
     private List<Log> logList;
     

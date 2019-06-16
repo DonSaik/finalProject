@@ -5,10 +5,8 @@
  */
 package lt.viko.eif.finalproject.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lt.viko.eif.finalproject.models.User;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,43 +30,27 @@ import lt.viko.eif.finalproject.resources.Link;
  *
  * @author donatas
  */
-@Entity
-@Table(name = "Log")
-@NamedQueries({
-    @NamedQuery(name = "Log.findAll", query = "SELECT l FROM Log l")})
+
 public class Log implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "Id")
+
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "City")
+
     private String city;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "Address")
+
+
     private String address;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "PlaceType")
+
     private String placeType;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "PlaceName")
+
     private String placeName;
-    @JoinColumn(name = "UserID", referencedColumnName = "Id")
-    @ManyToOne(optional = false)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
     private User user;
     private List<Link> links = new ArrayList<>();
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private OpeningHours openingHours;
 
     public void setLinks(List<Link> links) {
         this.links = links;
@@ -77,8 +59,7 @@ public class Log implements Serializable {
     public List<Link> getLinks() {
         return links;
     }
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private OpeningHours openingHours;
+    
 
     public void setOpeningHours(OpeningHours openingHours) {
         this.openingHours = openingHours;

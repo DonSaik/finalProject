@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.NotFoundException;
 import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
 
@@ -49,6 +50,7 @@ public class LogDaoImpl implements LogDao{
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (allLogs.isEmpty()) throw new NotFoundException("No log found");
         return allLogs;
     }
 
@@ -74,6 +76,7 @@ public class LogDaoImpl implements LogDao{
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (log == null) throw new NotFoundException("No log found");
         return log;
         
     }
@@ -165,6 +168,7 @@ public class LogDaoImpl implements LogDao{
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (allLogs.isEmpty()) throw new NotFoundException("No log found");
         return allLogs;
     }
 
@@ -192,6 +196,7 @@ public class LogDaoImpl implements LogDao{
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (log ==null) throw new NotFoundException("No log found");
         return log;
     }
 
@@ -229,6 +234,7 @@ public class LogDaoImpl implements LogDao{
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (allLogs.isEmpty()) throw new NotFoundException("No logs found");
         return allLogs;
     }
     

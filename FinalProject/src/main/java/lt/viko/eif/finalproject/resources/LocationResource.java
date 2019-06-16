@@ -5,6 +5,7 @@
  */
 package lt.viko.eif.finalproject.resources;
 
+import com.google.maps.errors.OverQueryLimitException;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
 import java.math.BigDecimal;
@@ -104,11 +105,7 @@ public class LocationResource {
     @POST
     public Response putJson(User user) throws Exception {
         System.out.println(user.toString());
-            
-            List <PlaceType> activities = new ArrayList<>();
-            activities.add(PlaceType.BAR);
-            activities.add(PlaceType.CAFE);
-            
+
             user.setLogList(new ArrayList<Log>());
             BMI bmi = new BMI(user.getMass(), user.getHeight());
             user.setCategory(bmi.getCategoryName());
@@ -117,6 +114,7 @@ public class LocationResource {
             GoogleAPIClient gog = new  GoogleAPIClient();
             PlacesSearchResult result;
             String vicinity = "";
+            try{
             for (PlaceType activity : bmi.getActivities()) {
                result =  gog.findNearbyPlace(user.getLat(), user.getLng(), activity)[0];
                Log log = new Log();
@@ -128,6 +126,7 @@ public class LocationResource {
                user.getLogList().add(log);
                result = null;
             }
+            
             user = userDao.addUser(user);
             System.out.print(""+user.getId());
              for (Log log: user.getLogList()){
@@ -135,6 +134,14 @@ public class LocationResource {
                  logDao.addLog(log);
                  log.setUser(null);
              }
+            }
+            catch (OverQueryLimitException e){
+                return Response.status(500).entity(e.getMessage()).build();
+            }
+            catch (Exception ex){
+                return Response.status(400).entity(ex.getMessage()).build();
+            }
+            
              
             List<Link> links;
             links = new ArrayList<>();
