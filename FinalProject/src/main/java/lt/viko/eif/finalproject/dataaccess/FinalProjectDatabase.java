@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class FinalProjectDatabase extends DaoFactory {
     
-    public static String connectionString= "jdbc:mysql://localhost:3306/finalProject?useUnicode=true&characterEncoding=utf-8";
+    public static String connectionString= "jdbc:mysql://localhost:3306/finalProject?useLegacyDatetimeCode=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8";
     public static String userString = "root";
     public static String passString = "";
     
