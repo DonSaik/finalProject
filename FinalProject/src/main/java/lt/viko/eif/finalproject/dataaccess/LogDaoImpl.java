@@ -202,7 +202,7 @@ public class LogDaoImpl implements LogDao{
             stmt.setString (8, placeType);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()){
+            while (rs.next()){
                 allLogs.add(new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
                         new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
                         rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13))));
