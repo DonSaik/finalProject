@@ -6,6 +6,8 @@
 package lt.viko.eif.finalproject.resources;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -20,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import lt.viko.eif.finalproject.dataaccess.FinalProjectDatabase;
 import lt.viko.eif.finalproject.dataaccess.LogDao;
+import lt.viko.eif.finalproject.models.Log;
+import lt.viko.eif.finalproject.models.User;
 
 /**
  * REST Web Service
@@ -47,13 +51,28 @@ public class LogsResource {
      */
     @GET
     public Response getJson() {
-        
-         return Response.status(201).entity(logDao.getAll()).build();
+        List<Log> logs = logDao.getAll();
+        List<Link> links;
+        for (Log log: logs){
+            links = new ArrayList<>();
+            links.add(new Link(getUriForUserLog(log), "self"));
+            links.add(new Link(getUriForSelf(log.getUser()), "user"));
+            log.setLinks(links);
+            log.setUser(null);
+        }
+         return Response.status(201).entity(logs).build();
     }
     @GET
     @Path("/{id}")
     public Response getLogById(@PathParam("id") int id) throws Exception {
-        return Response.status(201).entity(logDao.getById(id)).build();
+        Log log = logDao.getById(id);
+        List<Link> links;
+            links = new ArrayList<>();
+            links.add(new Link(getUriForUserLog(log), "self"));
+            links.add(new Link(getUriForSelf(log.getUser()), "user"));
+            log.setLinks(links);
+            log.setUser(null);
+        return Response.status(201).entity(log).build();
     }
     @GET
     @Path("/q")
@@ -62,6 +81,49 @@ public class LogsResource {
             @QueryParam("placeName") String placeName, 
             @QueryParam("placeType") String placeType) throws Exception {
         System.out.println("Fetching user info by "+ city +" "+ address+" "+ placeName+" "+ placeType);
-        return Response.status(201).entity(logDao.getFilteredLogs(city, address, placeName, placeType)).build();
+        List<Log> logs = logDao.getFilteredLogs(city, address, placeName, placeType);
+        List<Link> links;
+        for (Log log: logs){
+            links = new ArrayList<>();
+            links.add(new Link(getUriForUserLog(log), "self"));
+            links.add(new Link(getUriForSelf(log.getUser()), "user"));
+            log.setLinks(links);
+            log.setUser(null);
+        }
+        return Response.status(201).entity(logs).build();
+    }
+    /**
+     * Method to get link for self.
+     * @param user  object
+     * @return URI converted to string
+     */
+    private String getUriForSelf (User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path(Long.toString(user.getId()))
+                .build()
+                .toString();
+    }
+    /**
+     * Method to get link for Contact resource
+     * @param user object
+     * @return URI converted to string
+     */
+    private String getUriForUsersLogs(User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs")
+                .resolveTemplate("userId", user.getId())
+                .build()
+                .toString();
+    }
+    private String getUriForUserLog(Log log){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs/{logId}")
+                .resolveTemplate("userId", log.getUser().getId())
+                .resolveTemplate("logId", log.getId())
+                .build()
+                .toString();
     }
 }

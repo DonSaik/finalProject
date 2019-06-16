@@ -146,8 +146,10 @@ public class LogDaoImpl implements LogDao{
     @Override
     public List<Log> getUserLogs(int userid) {
         List <Log> allLogs = new ArrayList<>();
-        String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType "
-                    + "FROM Log WHERE Log.UserId =?";
+        String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
+                    + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
+                    + "FROM Log INNER JOIN User on User.Id = Log.UserID "
+                + "WHERE Log.UserId =?";
         try {
             
             Connection connection = FinalProjectDatabase.createConnection();
@@ -156,7 +158,9 @@ public class LogDaoImpl implements LogDao{
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()){
-                allLogs.add(new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                allLogs.add(new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
+                        new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
+                        rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13))));
             }
         } catch (SQLException ex) {
             Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,8 +171,10 @@ public class LogDaoImpl implements LogDao{
     @Override
     public Log getUserLogById(int userid, int logid) {
         Log log  = null;
-        String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType "
-                    + "FROM Log WHERE Log.UserId =? AND Log.Id = ?";
+        String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
+                    + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
+                    + "FROM Log INNER JOIN User on User.Id = Log.UserID"
+                + " WHERE Log.UserId =? AND Log.Id = ?";
         try {
             
             Connection connection = FinalProjectDatabase.createConnection();
@@ -178,7 +184,9 @@ public class LogDaoImpl implements LogDao{
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()){
-                log = new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+                log =new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
+                        new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
+                        rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13)));
             }
             
         } catch (SQLException ex) {

@@ -4,6 +4,7 @@
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/FinalProjectDatabase.java
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/models/Log.java
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/DaoFactory.java
+/home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/Link.java
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/LogsResource.java
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/dataaccess/LogDaoImpl.java
 /home/donatas/git_workspace/finalProject/FinalProject/src/main/java/lt/viko/eif/finalproject/resources/UsersResource.java

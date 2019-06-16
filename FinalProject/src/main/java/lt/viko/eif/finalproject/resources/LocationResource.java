@@ -135,6 +135,46 @@ public class LocationResource {
                  logDao.addLog(log);
                  log.setUser(null);
              }
+             
+            List<Link> links;
+            links = new ArrayList<>();
+            links.add(new Link(getUriForSelf(user), "self"));
+            links.add(new Link(getUriForUsersLogs(user), "logs"));
+            user.setLinks(links);
             return Response.status(201).entity(user).build();
+    }
+     /**
+     * Method to get link for self.
+     * @param user  object
+     * @return URI converted to string
+     */
+    private String getUriForSelf (User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path(Long.toString(user.getId()))
+                .build()
+                .toString();
+    }
+    /**
+     * Method to get link for Contact resource
+     * @param user object
+     * @return URI converted to string
+     */
+    private String getUriForUsersLogs(User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs")
+                .resolveTemplate("userId", user.getId())
+                .build()
+                .toString();
+    }
+    private String getUriForUserLog(Log log){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs/{logId}")
+                .resolveTemplate("userId", log.getUser().getId())
+                .resolveTemplate("logId", log.getId())
+                .build()
+                .toString();
     }
 }

@@ -6,6 +6,8 @@
 package lt.viko.eif.finalproject.resources;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -21,6 +23,8 @@ import javax.ws.rs.core.Response;
 import lt.viko.eif.finalproject.dataaccess.FinalProjectDatabase;
 import lt.viko.eif.finalproject.dataaccess.LogDao;
 import lt.viko.eif.finalproject.dataaccess.UserDao;
+import lt.viko.eif.finalproject.models.Log;
+import lt.viko.eif.finalproject.models.User;
 
 /**
  * REST Web Service
@@ -50,7 +54,15 @@ public class UsersResource {
     @GET
     public Response getJson() throws Exception {
         System.out.println("Fetching all user info...");
-        return Response.status(201).entity(userDao.getAll()).build();
+        List<User> users = userDao.getAll();
+        List<Link> links;
+        for (User user: users){
+            links = new ArrayList<>();
+            links.add(new Link(getUriForSelf(user), "self"));
+            links.add(new Link(getUriForUsersLogs(user), "logs"));
+            user.setLinks(links);
+        }
+        return Response.status(201).entity(users).build();
     }
     
     @GET
@@ -62,21 +74,85 @@ public class UsersResource {
             @DefaultValue("0")@QueryParam("height") double height,
             @DefaultValue("0")@QueryParam("bmi") BigDecimal bmi) throws Exception {
         System.out.println("Fetching user info by "+ category  +" "+ lat+" "+ lng+" "+ mass+" "+ height+" "+ bmi);
-        return Response.status(201).entity(userDao.getFilteredUsers( category, lat, lng, mass,  height, bmi)).build();
+        List<User> users = userDao.getFilteredUsers( category, lat, lng, mass,  height, bmi);
+        List<Link> links;
+        for (User user: users){
+            links = new ArrayList<>();
+            links.add(new Link(getUriForSelf(user), "self"));
+            links.add(new Link(getUriForUsersLogs(user), "logs"));
+            user.setLinks(links);
+        }
+        return Response.status(201).entity(users).build();
     }
     @GET
     @Path("{userid}/logs")
-    public Response getLogById(@PathParam("userid") int userid) throws Exception {
-        return Response.status(201).entity(logDao.getUserLogs(userid)).build();
+    public Response getLogsById(@PathParam("userid") int userid) throws Exception {
+        List<Log> logs = logDao.getUserLogs(userid);
+        List<Link> links;
+        for (Log log: logs){
+            links = new ArrayList<>();
+            links.add(new Link(getUriForUserLog(log), "self"));
+            links.add(new Link(getUriForSelf(log.getUser()), "user"));
+            log.setLinks(links);
+            log.setUser(null);
+        }
+        return Response.status(201).entity(logs).build();
     }
     @GET
     @Path("{userid}/logs/{id}")
     public Response getLogById(@PathParam("userid") int userid,@PathParam("id") int id) throws Exception {
-        return Response.status(201).entity(logDao.getUserLogById(userid, id)).build();
+        Log log = logDao.getUserLogById(userid, id);
+        List<Link> links;
+            links = new ArrayList<>();
+            links.add(new Link(getUriForUserLog(log), "self"));
+            links.add(new Link(getUriForSelf(log.getUser()), "user"));
+            log.setLinks(links);
+            log.setUser(null);
+        return Response.status(201).entity(log).build();
     }
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") int id) throws Exception {
-        return Response.status(201).entity(userDao.getById(id)).build();
+        User user = userDao.getById(id);
+        List<Link> links;
+            links = new ArrayList<>();
+            links.add(new Link(getUriForSelf(user), "self"));
+            links.add(new Link(getUriForUsersLogs(user), "logs"));
+            user.setLinks(links);
+        return Response.status(201).entity(user).build();
+    }
+    /**
+     * Method to get link for self.
+     * @param user  object
+     * @return URI converted to string
+     */
+    private String getUriForSelf (User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path(Long.toString(user.getId()))
+                .build()
+                .toString();
+    }
+    /**
+     * Method to get link for Contact resource
+     * @param user object
+     * @return URI converted to string
+     */
+    private String getUriForUsersLogs(User user){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs")
+                .resolveTemplate("userId", user.getId())
+                .build()
+                .toString();
+    }
+    private String getUriForUserLog(Log log){
+        return context.getBaseUriBuilder()
+                .path(UsersResource.class)
+                .path("{userId}/logs/{logId}")
+                .resolveTemplate("userId", log.getUser().getId())
+                .resolveTemplate("logId", log.getId())
+                .build()
+                .toString();
     }
 }

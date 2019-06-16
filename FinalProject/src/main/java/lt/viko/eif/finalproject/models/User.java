@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lt.viko.eif.finalproject.resources.Link;
 
 /**
  *
@@ -76,6 +77,16 @@ public class User implements Serializable {
     private List<Log> logList;
     
     private List <PlaceType> activities = new ArrayList<>();
+    
+    private List<Link> links = new ArrayList<>();
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
     public User() {
     }
 

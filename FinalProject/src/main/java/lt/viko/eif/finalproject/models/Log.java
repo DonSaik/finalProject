@@ -24,6 +24,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.google.maps.model.OpeningHours;
+import java.util.ArrayList;
+import java.util.List;
+import lt.viko.eif.finalproject.resources.Link;
 
 /**
  *
@@ -65,7 +68,15 @@ public class Log implements Serializable {
     @ManyToOne(optional = false)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private User user;
-    
+    private List<Link> links = new ArrayList<>();
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private OpeningHours openingHours;
 
