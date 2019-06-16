@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: lt.viko.eif.finalproject.dataaccess.LogDaoImplTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.796 sec
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.383 sec
