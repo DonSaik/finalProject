@@ -29,7 +29,7 @@ import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
 
 /**
- * REST Web Service
+ * REST Web Service for User information.
  *
  * @author donatas
  */
@@ -50,8 +50,8 @@ public class UsersResource {
     }
 
     /**
-     * Retrieves representation of an instance of lt.viko.eif.finalproject.resources.LocationResource
-     * @return an instance of java.lang.String
+     * Retrieves representation of an instance users
+     * @return
      */
     @GET
     public Response getJson() throws Exception {
@@ -72,7 +72,10 @@ public class UsersResource {
         }
         return Response.status(200).entity(users).build();
     }
-    
+    /**
+     * Retrieves representation of an filtered instance users
+     * @return
+     */
     @GET
     @Path("/q")
     public Response get(@QueryParam("category") String category, 
@@ -100,6 +103,10 @@ public class UsersResource {
         }
         return Response.status(200).entity(users).build();
     }
+    /**
+     * Retrieves representation of an instance user logs
+     * @return
+     */
     @GET
     @Path("{userid}/logs")
     public Response getLogsById(@PathParam("userid") int userid) throws Exception {
@@ -122,6 +129,10 @@ public class UsersResource {
         }
         return Response.status(200).entity(logs).build();
     }
+     /**
+     * Retrieves representation of an instance user log
+     * @return
+     */
     @GET
     @Path("{userid}/logs/{id}")
     public Response getLogById(@PathParam("userid") int userid,@PathParam("id") int id) throws Exception {
@@ -142,6 +153,10 @@ public class UsersResource {
             log.setUser(null);
         return Response.status(200).entity(log).build();
     }
+     /**
+     * Retrieves representation of an instance user.
+     * @return
+     */
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") int id) throws Exception {
@@ -174,7 +189,7 @@ public class UsersResource {
                 .toString();
     }
     /**
-     * Method to get link for Contact resource
+     * Method to get link for specific user logs.
      * @param user object
      * @return URI converted to string
      */
@@ -186,6 +201,12 @@ public class UsersResource {
                 .build()
                 .toString();
     }
+    
+    /**
+     * Method to get link for specific user log;
+     * @param user object
+     * @return URI converted to string
+     */
     private String getUriForUserLog(Log log){
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)

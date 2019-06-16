@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: lt.viko.eif.finalproject.dataaccess.UserDaoImplTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.063 sec
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.012 sec

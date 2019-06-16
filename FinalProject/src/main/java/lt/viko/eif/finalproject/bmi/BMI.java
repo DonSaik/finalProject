@@ -8,14 +8,13 @@ package lt.viko.eif.finalproject.bmi;
 import com.google.maps.model.PlaceType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * Class to work with BMI.
  * @author donatas
  */
 public class BMI {
+    
     private double height;
     private double weight;
     private double bmiIndex = -1;
@@ -28,6 +27,7 @@ public class BMI {
     public List<PlaceType> getActivities() {
         return activities;
     }
+    
     private static final double indexCategoryMatrix [][] = {
         {0, 15},
         {15, 16},
@@ -38,6 +38,7 @@ public class BMI {
     };
     public BMI(){};
     
+    
     public BMI ( double weight, double height) throws Exception{
         this.height=height;
         this.weight=weight;
@@ -47,14 +48,24 @@ public class BMI {
             throw ex;
         }
     }
-    
+    /**
+     * Method to calculate body mass index
+     * @param height
+     * @param weight
+     * @return double value of index
+     * @throws Exception 
+     */
     public static double bmiIndexCalculator(double height, double weight) throws Exception{
         double index = weight / (height * height);
         if (index <5 || index >250) throw new Exception("Error. Bad height or weight");
         else return index;
     }
     
-    
+    /**
+     * Method to get category by your BMI.
+     * @return
+     * @throws Exception 
+     */
     public String getCategoryName() throws Exception{
         try{
              bmiIndex= bmiIndexCalculator(height, weight);

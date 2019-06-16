@@ -8,26 +8,13 @@ package lt.viko.eif.finalproject.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import com.google.maps.model.OpeningHours;
 import java.util.ArrayList;
 import java.util.List;
 import lt.viko.eif.finalproject.resources.Link;
 
 /**
- *
+ * Log entity class. 
  * @author donatas
  */
 
@@ -45,8 +32,9 @@ public class Log implements Serializable {
     private String placeType;
 
     private String placeName;
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private User user;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Link> links = new ArrayList<>();
     
     @JsonInclude(JsonInclude.Include.NON_NULL)

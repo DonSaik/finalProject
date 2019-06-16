@@ -30,7 +30,7 @@ import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
 
 /**
- * REST Web Service
+ * REST Web Service Logs resource
  *
  * @author donatas
  */
@@ -50,8 +50,8 @@ public class LogsResource {
     }
 
     /**
-     * Retrieves representation of an instance of lt.viko.eif.finalproject.resources.LogsResource
-     * @return an instance of java.lang.String
+     * Retrieves representation of an instance of logs
+     * @return
      */
     @GET
     public Response getJson() {
@@ -73,6 +73,14 @@ public class LogsResource {
         }
          return Response.status(200).entity(logs).build();
     }
+    
+    /**
+     * 
+     * Retrieves representation of an instance of logs
+     * @param id
+     * @return
+     * @throws Exception 
+     */
     @GET
     @Path("/{id}")
     public Response getLogById(@PathParam("id") int id) throws Exception {
@@ -94,6 +102,15 @@ public class LogsResource {
             log.setUser(null);
         return Response.status(200).entity(log).build();
     }
+    /**
+     * Retrieves filtered representation of an instance of logs
+     * @param city
+     * @param address
+     * @param placeName
+     * @param placeType
+     * @return
+     * @throws Exception 
+     */
     @GET
     @Path("/q")
     public Response get(@QueryParam("city") String city, 
@@ -135,7 +152,7 @@ public class LogsResource {
                 .toString();
     }
     /**
-     * Method to get link for Contact resource
+     * Method to get link for specific user logs
      * @param user object
      * @return URI converted to string
      */
@@ -147,6 +164,11 @@ public class LogsResource {
                 .build()
                 .toString();
     }
+    /**
+     * Method to get link for specific user log;
+     * @param user object
+     * @return URI converted to string
+     */
     private String getUriForUserLog(Log log){
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)

@@ -17,7 +17,7 @@ import javax.ws.rs.NotFoundException;
 import lt.viko.eif.finalproject.models.User;
 
 /**
- *
+ * User dao implementation for MYSQL database
  * @author donatas
  */
 public class UserDaoImpl implements UserDao{

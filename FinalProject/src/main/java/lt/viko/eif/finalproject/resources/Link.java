@@ -6,7 +6,7 @@
 package lt.viko.eif.finalproject.resources;
 
 /**
- * Class used to represent links for hateoas.
+ * Class used to represent links for HATEOAS.
  * @author donatas
  */
 public class Link {

@@ -5,7 +5,6 @@
  */
 package lt.viko.eif.finalproject.dataaccess;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +18,7 @@ import lt.viko.eif.finalproject.models.User;
 
 
 /**
- *
+ *  DAO implementation using MYSQL database.
  * @author donatas
  */
 public class LogDaoImpl implements LogDao{
@@ -101,31 +100,14 @@ public class LogDaoImpl implements LogDao{
 
     @Override
     public boolean deleteLog(int id)throws SQLException {
-        String query = "Delete from Recipe Where Recipe.Id = ?";
-        
-            Connection connection = FinalProjectDatabase.createConnection();
-            PreparedStatement preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setInt(1, id);
-            preparedStmt.executeUpdate();
-
-            connection.close();
-            return true;
+         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         
     }
 
 
     @Override
     public boolean updateLog(int id, Log log) throws SQLException {
-        String query = "Update Recipe set Recipe.name= ? Where Recipe.Id = ? ";
-        
-            
-            Connection connection = FinalProjectDatabase.createConnection();
-            PreparedStatement preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setInt(2, id);
-            preparedStmt.setString(1, log.getAddress());
-            preparedStmt.executeUpdate();
-            connection.close();
-            return true;
+         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

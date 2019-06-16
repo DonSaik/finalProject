@@ -5,11 +5,14 @@
  */
 package lt.viko.eif.finalproject.resources;
 
+import com.google.maps.errors.ApiException;
 import com.google.maps.errors.OverQueryLimitException;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,7 @@ import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
 
 /**
- * REST Web Service
+ * REST Web Service Class to get location by bmi.
  *
  * @author donatas
  */
@@ -53,53 +56,9 @@ public class LocationResource {
     public LocationResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of lt.viko.eif.finalproject.resources.LocationResource
-     * @return an instance of java.lang.String
-     */
-    @GET
-    
-    public Response getJson() throws Exception {
-        //TODO return proper representation object
-        /*
-        List<String> stringai = new ArrayList<>();
-        stringai.add("a");
-        stringai.add("b");
-        //new GenericEntity < List<String>> (stringai){}
-        BMI bmi = new BMI (5000, 1.8);
-        GoogleAPIClient gog = new  GoogleAPIClient();
-        
-        // return Response.status(200).entity(bmi.getCategoryName()).build();
-         return Response.status(200).entity(gog.findNearbyPlace()).build();*/
-        
-        /*
-        User user = new User(Integer.SIZE, 54.717177, 25.297325, 75, 1.8);
-        
-          List <PlaceType> activities = new ArrayList<>();
-            activities.add(PlaceType.BAR);
-            activities.add(PlaceType.CAFE);
-            
-            Log log = new Log();
-            BMI bmi = new BMI(user.getMass(), user.getHeight());
-            log.setUserCategory(bmi.getCategoryName());
-            log.setBMIIndex(bmi.getBmiIndex());
-            GoogleAPIClient gog = new  GoogleAPIClient();
-            PlacesSearchResult result;
-            for (PlaceType activity : activities) {
-               result =  gog.findNearbyPlace (user.getLat(), user.getLng(), activity)[0];
-               log.setPlaceName(result.name);
-               log.setPlaceType(activity.toString());
-               log.setAddress(result.vicinity.substring(result.vicinity.lastIndexOf(", ")).trim());
-               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")));
-            }
-            user.getLogList().add(log);
-
-            return Response.status(201).entity(user).build();*/
-        return Response.status(201).build();
-    }
 
     /**
-     * PUT method for updating or creating an instance of LocationResource
+     * Post method for creating an instance of LocationResource
      * @param content representation for the resource
      */
     @POST
@@ -112,18 +71,24 @@ public class LocationResource {
             user.setBmi(new BigDecimal(bmi.getBmiIndex()).setScale(2, RoundingMode.HALF_UP));
             
             GoogleAPIClient gog = new  GoogleAPIClient();
-            PlacesSearchResult result;
+            PlacesSearchResult result= null;
             String vicinity = "";
             try{
             for (PlaceType activity : bmi.getActivities()) {
-               result =  gog.findNearbyPlace(user.getLat(), user.getLng(), activity)[0];
+               
+                for (PlacesSearchResult tempResult : gog.findNearbyPlace(user.getLat(), user.getLng(), activity)){
+                   if (tempResult.vicinity.lastIndexOf(", ")>0 ){
+                       result =  tempResult; break;}
+               }
+               
+               if(result != null){
                Log log = new Log();
                log.setPlaceName(result.name);
                log.setPlaceType(activity.toString());
-               vicinity = result.vicinity;
-               log.setAddress(vicinity.substring(0, vicinity.lastIndexOf(", ")-2));
+
+               log.setAddress(result.vicinity.substring(0, result.vicinity.lastIndexOf(", ")-2));
                log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")+2));
-               user.getLogList().add(log);
+               user.getLogList().add(log);}
                result = null;
             }
             
@@ -133,6 +98,7 @@ public class LocationResource {
                  log.setUser(user);
                  logDao.addLog(log);
                  log.setUser(null);
+                 log.setLinks(null);
              }
              
              
@@ -146,7 +112,7 @@ public class LocationResource {
             catch (OverQueryLimitException e){
                 return Response.status(500).entity("Error: " + e.getMessage()).build();
             }
-            catch (Exception ex){
+            catch (ApiException | IOException | InterruptedException | SQLException ex){
                 return Response.status(404).entity("Error: " + ex.getMessage()).build();
             }
             
@@ -164,7 +130,7 @@ public class LocationResource {
                 .toString();
     }
     /**
-     * Method to get link for Contact resource
+     * Method to get link for specific user logs.
      * @param user object
      * @return URI converted to string
      */
@@ -176,6 +142,11 @@ public class LocationResource {
                 .build()
                 .toString();
     }
+    /**
+     * Method to get link for specific user log;
+     * @param user object
+     * @return URI converted to string
+     */
     private String getUriForUserLog(Log log){
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)

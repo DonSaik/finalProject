@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="20" failures="0" name="lt.viko.eif.finalproject.models.UserTest" time="0.027" errors="0" skipped="0">
+<testsuite tests="20" failures="0" name="lt.viko.eif.finalproject.models.UserTest" time="0.01" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
@@ -61,22 +61,22 @@
     <property name="sun.cpu.isalist" value=""/>
   </properties>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetLogList" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetId" time="0.001"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetId" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetId" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetMass" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetNick" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetLogList" time="0"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testHashCode" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetHeight" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetHeight" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testEquals" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetBmi" time="0.001"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testHashCode" time="0"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetHeight" time="0"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetHeight" time="0"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testEquals" time="0"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetBmi" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetLat" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetLng" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetCategory" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testGetCategory" time="0"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetMass" time="0.001"/>
-  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetNick" time="0.001"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetMass" time="0.003"/>
+  <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetNick" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetBmi" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetLat" time="0"/>
   <testcase classname="lt.viko.eif.finalproject.models.UserTest" name="testSetLng" time="0"/>
