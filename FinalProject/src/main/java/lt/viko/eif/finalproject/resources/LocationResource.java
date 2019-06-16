@@ -134,14 +134,7 @@ public class LocationResource {
                  logDao.addLog(log);
                  log.setUser(null);
              }
-            }
-            catch (OverQueryLimitException e){
-                return Response.status(500).entity(e.getMessage()).build();
-            }
-            catch (Exception ex){
-                return Response.status(400).entity(ex.getMessage()).build();
-            }
-            
+             
              
             List<Link> links;
             links = new ArrayList<>();
@@ -149,6 +142,14 @@ public class LocationResource {
             links.add(new Link(getUriForUsersLogs(user), "logs"));
             user.setLinks(links);
             return Response.status(201).entity(user).build();
+            }
+            catch (OverQueryLimitException e){
+                return Response.status(500).entity("Error: " + e.getMessage()).build();
+            }
+            catch (Exception ex){
+                return Response.status(404).entity("Error: " + ex.getMessage()).build();
+            }
+            
     }
      /**
      * Method to get link for self.

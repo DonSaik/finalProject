@@ -6,8 +6,11 @@
 package lt.viko.eif.finalproject.resources;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -57,6 +60,8 @@ public class LogsResource {
         logs = logDao.getAll();}
         catch (NotFoundException ex){
             return Response.status(204).entity(logs).build();
+        } catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
         }
         List<Link> links;
         for (Log log: logs){
@@ -77,6 +82,9 @@ public class LogsResource {
         }
         catch (NotFoundException ex){
             return Response.status(204).entity(log).build();
+        }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
         }
         List<Link> links;
             links = new ArrayList<>();
@@ -99,6 +107,9 @@ public class LogsResource {
         }
         catch (NotFoundException ex){
             return Response.status(204).entity(logs).build();
+        }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
         }
         
         List<Link> links;

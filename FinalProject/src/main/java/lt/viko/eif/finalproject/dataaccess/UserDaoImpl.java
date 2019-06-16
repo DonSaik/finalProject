@@ -5,7 +5,6 @@
  */
 package lt.viko.eif.finalproject.dataaccess;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.NotFoundException;
 import lt.viko.eif.finalproject.models.User;
 
@@ -28,10 +25,9 @@ public class UserDaoImpl implements UserDao{
     
     
     @Override
-    public List<User> getAll() {
+    public List<User> getAll() throws SQLException {
         List <User> allUsers = new ArrayList<>();
         
-        try {
             
             Connection connection = FinalProjectDatabase.createConnection();
             Statement stmt = connection.createStatement();
@@ -43,18 +39,16 @@ public class UserDaoImpl implements UserDao{
                         rs.getDouble(5), rs.getDouble(6), rs.getBigDecimal(7), rs.getString(8)));
             }
             connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
          if (allUsers.isEmpty()) throw new NotFoundException("No user found");
         return allUsers;
     }
 
     @Override
-    public User getById(int id) {
+    public User getById(int id)throws SQLException {
         User user  = null;
         String query = "SELECT User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category  FROM User Where User.Id = ?";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -66,27 +60,25 @@ public class UserDaoImpl implements UserDao{
                         rs.getDouble(5), rs.getDouble(6), rs.getBigDecimal(7), rs.getString(8));
             }
             connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         if (user == null) throw new NotFoundException("No user found");
         return user;
     }
 
     @Override
-    public User addUser(User user) {
+    public User addUser(User user) throws SQLException{
         String query = "INSERT INTO User (User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category)"
                 + " values (?, ?, ?, ?, ?, ?, ?)";
-        try {
+        
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStmt.setString(1, new String (user.getNick().getBytes(), "UTF-8"));
+            preparedStmt.setString(1, user.getNick());
             preparedStmt.setDouble(2, user.getLat());
             preparedStmt.setDouble(3, user.getLng());
             preparedStmt.setDouble(4, user.getMass());
             preparedStmt.setDouble(5, user.getHeight());
             preparedStmt.setBigDecimal(6, user.getBmi());
-            preparedStmt.setString(7, new String (user.getCategory().getBytes(), "UTF-8"));
+            preparedStmt.setString(7, user.getCategory());
             preparedStmt.executeUpdate();
             ResultSet rs = preparedStmt.getGeneratedKeys();
             int id = 0;
@@ -96,18 +88,13 @@ public class UserDaoImpl implements UserDao{
             user.setId(id);
             connection.close();
             return user;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        
     }
 
     @Override
-    public boolean deleteUser (int id) {
+    public boolean deleteUser (int id)throws SQLException {
         String query = "Delete from User Where User.Id = ?";
-        try {
+        
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query);
             preparedStmt.setInt(1, id);
@@ -115,41 +102,31 @@ public class UserDaoImpl implements UserDao{
 
             connection.close();
             return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
     }
 
 
     @Override
-    public boolean updateUser(int id, User user) {
+    public boolean updateUser(int id, User user) throws SQLException{
         String query = "Update User set User.Nick = ?, User.Lat = ?, User.Lng = ?, User.Mass = ?, "
                 + "User.Height = ?, User.BMI  = ?, User.Category = ? Where User.Id = ? ";
-        try {
+      
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query);
             preparedStmt.setInt(8, id);
-            preparedStmt.setString(1, new String (user.getNick().getBytes(), "UTF-8"));
+            preparedStmt.setString(1, user.getNick());
             preparedStmt.setDouble(2, user.getLat());
             preparedStmt.setDouble(3, user.getLng());
             preparedStmt.setDouble(4, user.getMass());
             preparedStmt.setDouble(5, user.getHeight());
             preparedStmt.setBigDecimal(6, user.getBmi());
-            preparedStmt.setString(7, new String (user.getCategory().getBytes(), "UTF-8"));
+            preparedStmt.setString(7, user.getCategory());
             preparedStmt.executeUpdate();
             connection.close();
             return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
     } 
 
     @Override
-    public List<User> getFilteredUsers(String category, double lat, double lng, double mass, double height, BigDecimal bmi) {
+    public List<User> getFilteredUsers(String category, double lat, double lng, double mass, double height, BigDecimal bmi) throws SQLException {
         List <User> allUsers = new ArrayList<>();
         String query = "SELECT User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category  FROM User "
                 + "Where (User.Category = ? OR ? IS NULL) "
@@ -158,8 +135,7 @@ public class UserDaoImpl implements UserDao{
                 + "AND (User.Mass = ? OR ? = 0)"
                 + "AND (User.Height = ? OR ? = 0)"
                 + "AND (User.bmi = ? OR ? = 0)";
-        try {
-            
+        
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, category);
@@ -183,9 +159,7 @@ public class UserDaoImpl implements UserDao{
                         rs.getDouble(5), rs.getDouble(6), rs.getBigDecimal(7), rs.getString(8)));
             }
             connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         if (allUsers.isEmpty()) throw new NotFoundException("No user found");
         return allUsers;
     }

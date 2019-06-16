@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.NotFoundException;
 import lt.viko.eif.finalproject.models.Log;
 import lt.viko.eif.finalproject.models.User;
@@ -29,38 +27,36 @@ public class LogDaoImpl implements LogDao{
     
     
     @Override
-    public List<Log> getAll() {
+    public List<Log> getAll() throws SQLException {
         List <Log> allLogs = new ArrayList<>();
         
-        try {
+        
             
-            Connection connection = FinalProjectDatabase.createConnection();
-            Statement stmt = connection.createStatement();
-            
-            ResultSet rs = stmt.executeQuery("SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
-                    + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
-                    + "FROM Log INNER JOIN User on User.Id = Log.UserID");
+        Connection connection = FinalProjectDatabase.createConnection();
+        Statement stmt = connection.createStatement();
 
-            while (rs.next()){
-                allLogs.add(new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
-                        new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
-                        rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13))));
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        ResultSet rs = stmt.executeQuery("SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
+                + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
+                + "FROM Log INNER JOIN User on User.Id = Log.UserID");
+
+        while (rs.next()){
+            allLogs.add(new Log(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
+                    new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
+                    rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13))));
         }
+        connection.close();
+        
         if (allLogs.isEmpty()) throw new NotFoundException("No log found");
         return allLogs;
     }
 
     @Override
-    public Log getById(int id) {
+    public Log getById(int id) throws SQLException{
         Log log  = null;
         String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
                     + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
                     + "FROM Log INNER JOIN User on User.Id = Log.UserID WHERE Log.Id = ?";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -73,26 +69,24 @@ public class LogDaoImpl implements LogDao{
                         rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13)));
             }
             connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
         if (log == null) throw new NotFoundException("No log found");
         return log;
         
     }
 
     @Override
-    public Log addLog (Log log) {
+    public Log addLog (Log log) throws SQLException{
         String query = "INSERT INTO Log (Log.UserID, Log.City, Log.Address, Log.PlaceName, Log.PlaceType)"
                 + " values (?, ?, ?, ?, ?)";
-        try {
+        
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStmt.setInt(1, log.getUser().getId());
-            preparedStmt.setString(2, new String (log.getCity().getBytes(), "UTF-8"));
-            preparedStmt.setString(3, new String (log.getAddress().getBytes(), "UTF-8"));
-            preparedStmt.setString(4, new String (log.getPlaceName().getBytes(), "UTF-8"));
-            preparedStmt.setString(5, new String (log.getPlaceType().getBytes(), "UTF-8"));
+            preparedStmt.setString(2, log.getCity());
+            preparedStmt.setString(3, log.getAddress());
+            preparedStmt.setString(4, log.getPlaceName());
+            preparedStmt.setString(5, log.getPlaceType());
             preparedStmt.executeUpdate();
             ResultSet rs = preparedStmt.getGeneratedKeys();
             int id = 0;
@@ -102,18 +96,13 @@ public class LogDaoImpl implements LogDao{
             log.setId(id);
             connection.close();
             return log;
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        
     }
 
     @Override
-    public boolean deleteLog(int id) {
+    public boolean deleteLog(int id)throws SQLException {
         String query = "Delete from Recipe Where Recipe.Id = ?";
-        try {
+        
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query);
             preparedStmt.setInt(1, id);
@@ -121,17 +110,14 @@ public class LogDaoImpl implements LogDao{
 
             connection.close();
             return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+        
     }
 
 
     @Override
-    public boolean updateLog(int id, Log log) {
+    public boolean updateLog(int id, Log log) throws SQLException {
         String query = "Update Recipe set Recipe.name= ? Where Recipe.Id = ? ";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement preparedStmt = connection.prepareStatement(query);
@@ -140,20 +126,16 @@ public class LogDaoImpl implements LogDao{
             preparedStmt.executeUpdate();
             connection.close();
             return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
     }
 
     @Override
-    public List<Log> getUserLogs(int userid) {
+    public List<Log> getUserLogs(int userid)throws SQLException {
         List <Log> allLogs = new ArrayList<>();
         String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
                     + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
                     + "FROM Log INNER JOIN User on User.Id = Log.UserID "
                 + "WHERE Log.UserId =?";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -165,21 +147,19 @@ public class LogDaoImpl implements LogDao{
                         new User(rs.getInt(6), rs.getString(7), rs.getDouble(8), rs.getDouble(9),
                         rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13))));
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         if (allLogs.isEmpty()) throw new NotFoundException("No log found");
         return allLogs;
     }
 
     @Override
-    public Log getUserLogById(int userid, int logid) {
+    public Log getUserLogById(int userid, int logid) throws SQLException{
         Log log  = null;
         String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
                     + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
                     + "FROM Log INNER JOIN User on User.Id = Log.UserID"
                 + " WHERE Log.UserId =? AND Log.Id = ?";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -193,15 +173,13 @@ public class LogDaoImpl implements LogDao{
                         rs.getDouble(10), rs.getDouble(11), rs.getBigDecimal(12), rs.getString(13)));
             }
             
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         if (log ==null) throw new NotFoundException("No log found");
         return log;
     }
 
     @Override
-    public List<Log> getFilteredLogs( String city, String address, String placeName, String placeType) {
+    public List<Log> getFilteredLogs( String city, String address, String placeName, String placeType) throws SQLException{
         List <Log> allLogs = new ArrayList<>();
         String query = "SELECT Log.Id, Log.City, Log.Address, Log.PlaceName, Log.PlaceType, "
                     + "User.id, User.Nick, User.Lat, User.Lng, User.Mass, User.Height, User.BMI, User.Category "
@@ -210,7 +188,7 @@ public class LogDaoImpl implements LogDao{
                 + "AND (Log.Address= ? OR ? IS NULL) "
                 + "AND (Log.PlaceName= ? OR ? IS NULL)"
                 + "AND (Log.PlaceType = ? OR ? IS NULL)";
-        try {
+        
             
             Connection connection = FinalProjectDatabase.createConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -231,9 +209,7 @@ public class LogDaoImpl implements LogDao{
             }
             connection.close();
             
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         if (allLogs.isEmpty()) throw new NotFoundException("No logs found");
         return allLogs;
     }

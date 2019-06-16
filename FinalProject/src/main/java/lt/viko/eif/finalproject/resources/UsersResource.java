@@ -6,6 +6,7 @@
 package lt.viko.eif.finalproject.resources;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Context;
@@ -87,6 +88,9 @@ public class UsersResource {
         catch (NotFoundException ex){
             return Response.status(204).entity(users).build();
         }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
+        }
         List<Link> links;
         for (User user: users){
             links = new ArrayList<>();
@@ -104,6 +108,9 @@ public class UsersResource {
         logs = logDao.getUserLogs(userid);}
         catch (NotFoundException ex){
             return Response.status(204).entity(logs).build();
+        }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
         }
         List<Link> links;
         for (Log log: logs){
@@ -124,6 +131,9 @@ public class UsersResource {
         catch (NotFoundException ex){
             return Response.status(204).entity(log).build();
         }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
+        }
         List<Link> links;
             links = new ArrayList<>();
             links.add(new Link(getUriForUserLog(log), "self"));
@@ -140,6 +150,9 @@ public class UsersResource {
             user =  userDao.getById(id);}
         catch (NotFoundException ex){
             return Response.status(204).entity(user).build();
+        }
+        catch (SQLException ex) {
+             return Response.status(404).entity("Error: " +ex.getMessage()).build();
         }
         List<Link> links;
             links = new ArrayList<>();

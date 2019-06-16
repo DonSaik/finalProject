@@ -20,13 +20,8 @@ public class FinalProjectDatabase extends DaoFactory {
     public static String userString = "root";
     public static String passString = "";
     
-    public static Connection createConnection(){
-        try {
-            return DriverManager.getConnection(connectionString, userString, passString);
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return null;
+    public static Connection createConnection() throws SQLException{
+        return DriverManager.getConnection(connectionString, userString, passString);
     }
 
     @Override

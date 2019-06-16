@@ -5,6 +5,7 @@
  */
 package lt.viko.eif.finalproject.dataaccess;
 
+import java.sql.SQLException;
 import java.util.List;
 import lt.viko.eif.finalproject.models.Log;
 
@@ -14,12 +15,12 @@ import lt.viko.eif.finalproject.models.Log;
  */
 public interface LogDao {
     
-    List<Log> getAll();
-    Log getById(int id);
-    Log addLog(Log log);
-    boolean deleteLog(int id);
-    boolean updateLog(int id, Log log);
-    List<Log> getFilteredLogs(String city, String address, String placeName, String placeType);
-    List<Log> getUserLogs(int userid);
-    Log getUserLogById(int userid, int logid);
+    List<Log> getAll() throws SQLException;
+    Log getById(int id)throws SQLException;
+    Log addLog(Log log)throws SQLException;
+    boolean deleteLog(int id)throws SQLException;
+    boolean updateLog(int id, Log log)throws SQLException;
+    List<Log> getFilteredLogs(String city, String address, String placeName, String placeType)throws SQLException;
+    List<Log> getUserLogs(int userid)throws SQLException;
+    Log getUserLogById(int userid, int logid)throws SQLException;
 }
