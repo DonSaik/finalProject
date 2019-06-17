@@ -55,7 +55,7 @@ public class BMI {
      * @return double value of index
      * @throws Exception 
      */
-    public static double bmiIndexCalculator(double height, double weight) throws Exception{
+    public static double bmiIndexCalculator(double height, double weight) throws Exception  {
         double index = weight / (height * height);
         if (index <5 || index >250) throw new Exception("Error. Bad height or weight");
         else return index;

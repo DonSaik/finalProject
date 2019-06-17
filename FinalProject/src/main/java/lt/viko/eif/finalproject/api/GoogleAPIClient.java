@@ -8,6 +8,7 @@ package lt.viko.eif.finalproject.api;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
+import com.google.maps.errors.InvalidRequestException;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResponse;
@@ -17,41 +18,43 @@ import java.io.IOException;
 
 /**
  * Class used to work with google API.
+ *
  * @author donatas
  */
 public class GoogleAPIClient {
-    
+
     /**
      * Google API key
      */
-    private static final String apiKey = "AIzaSyAYy-2CnDEjNhCbjacRgktZW7J_aR00QyE";
-    
+    private static final String apiKey = "AIzaSyDtyaE69M3eFNC7RVd4xdoFS3D9a2bd124";
+
     /**
      * Method to get nearby place by its type.
+     *
      * @param lat Latitude
      * @param lng Longitude
-     * @param placetType 
+     * @param placetType
      * @return Array of PlacesSearchResult
      * @throws ApiException
      * @throws InterruptedException
-     * @throws IOException 
+     * @throws IOException
      */
-    public  PlacesSearchResult[] findNearbyPlace (double lat, double lng, PlaceType placetType) throws ApiException, InterruptedException, IOException {
+    public PlacesSearchResult[] findNearbyPlace(double lat, double lng, PlaceType placetType) throws InvalidRequestException, ApiException, InterruptedException, IOException {
+       
         GeoApiContext context = new GeoApiContext.Builder()
-    .apiKey(apiKey)
+                .apiKey(apiKey)
                 .disableRetries()
-    .build();
+                .build();
         // location 
-      //LatLng location = new LatLng(54.717177, 25.297325);
-      LatLng location = new LatLng(lat, lng);
+        //LatLng location = new LatLng(54.717177, 25.297325);
+        LatLng location = new LatLng(lat, lng);
         PlacesSearchResponse result = PlacesApi.nearbySearchQuery(context, location)
-          //.radius(5000)
-          .type(placetType)
-          .rankby(RankBy.DISTANCE)
-          .await();
-        
-      return result.results;
+                //.radius(5000)
+                .type(placetType)
+                .rankby(RankBy.DISTANCE)
+                .await();
+
+        return result.results;
     }
-    
-    
+
 }

@@ -47,94 +47,110 @@ public class LocationResource {
 
     @Context
     private UriInfo context;
-    
-    private UserDao userDao = new FinalProjectDatabase().getUserDao();
-    private LogDao logDao = new FinalProjectDatabase().getLogDao();
+
+    private final UserDao userDao = new FinalProjectDatabase().getUserDao();
+    private final LogDao logDao = new FinalProjectDatabase().getLogDao();
+
     /**
      * Creates a new instance of LocationResource
      */
     public LocationResource() {
     }
 
-
     /**
-     * Post method for creating an instance of LocationResource
+     * Post method for saving data to a database.
+     *
      * @param content representation for the resource
      */
     @POST
     public Response putJson(User user) throws Exception {
         System.out.println(user.toString());
 
+        GoogleAPIClient gog = new GoogleAPIClient();
+        PlacesSearchResult result = null;
+        try {
+            if(user.getHeight() == 0.0 || user.getMass() == 0.0)
+                throw new Exception("No height or mass");
+            if(user.getLat() == 0.0|| user.getLng() == 0.0)
+                throw new Exception("No latitude or longtitude");
+            if(user.getLat() > 90|| user.getLng() > 180 || user.getLat() < -90 || user.getLng() < -180)
+                throw new Exception("Bad latitude or longtitude");
+            //Calculating data
             user.setLogList(new ArrayList<Log>());
             BMI bmi = new BMI(user.getMass(), user.getHeight());
             user.setCategory(bmi.getCategoryName());
             user.setBmi(new BigDecimal(bmi.getBmiIndex()).setScale(2, RoundingMode.HALF_UP));
-            
-            GoogleAPIClient gog = new  GoogleAPIClient();
-            PlacesSearchResult result= null;
-            String vicinity = "";
-            try{
-            for (PlaceType activity : bmi.getActivities()) {
-               
-                for (PlacesSearchResult tempResult : gog.findNearbyPlace(user.getLat(), user.getLng(), activity)){
-                   if (tempResult.vicinity.lastIndexOf(", ")>0 ){
-                       result =  tempResult; break;}
-               }
-               
-               if(result != null){
-               Log log = new Log();
-               log.setPlaceName(result.name);
-               log.setPlaceType(activity.toString());
 
-               log.setAddress(result.vicinity.substring(0, result.vicinity.lastIndexOf(", ")-2));
-               log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ")+2));
-               user.getLogList().add(log);}
-               result = null;
+            for (PlaceType activity : bmi.getActivities()) {
+                //Finds nearest activities for given attributes
+                for (PlacesSearchResult tempResult : gog.findNearbyPlace(user.getLat(), user.getLng(), activity)) {
+                    if (tempResult.vicinity.lastIndexOf(", ") > 0) {
+                        result = tempResult;
+                        break;
+                    }
+                }
+                //Sets found data to user log list
+                if (result != null) {
+                    Log log = new Log();
+                    log.setPlaceName(result.name);
+                    log.setPlaceType(activity.toString());
+                    log.setAddress(result.vicinity.substring(0, result.vicinity.lastIndexOf(", ") - 2));
+                    log.setCity(result.vicinity.substring(result.vicinity.lastIndexOf(", ") + 2));
+                    user.getLogList().add(log);
+                }
+                result = null;
             }
-            
-            user = userDao.addUser(user);
-            System.out.print(""+user.getId());
-             for (Log log: user.getLogList()){
-                 log.setUser(user);
-                 logDao.addLog(log);
-                 log.setUser(null);
-                 log.setLinks(null);
-             }
-             
-             
+            //If there was found nearby activities user and activities are saved in database
+            if (!user.getLogList().isEmpty()) {
+                user = userDao.addUser(user);
+                System.out.print("" + user.getId());
+                for (Log log : user.getLogList()) {
+                    log.setUser(user);
+                    logDao.addLog(log);
+                    log.setUser(null);
+                    log.setLinks(null);
+                }
+            } else {
+                throw new Exception("Can't find any places for you" + bmi.getActivities().toString());
+            }
+
+            // Set HATEOAS
             List<Link> links;
             links = new ArrayList<>();
             links.add(new Link(getUriForSelf(user), "self"));
             links.add(new Link(getUriForUsersLogs(user), "logs"));
             user.setLinks(links);
+
             return Response.status(201).entity(user).build();
-            }
-            catch (OverQueryLimitException e){
-                return Response.status(500).entity("Error: " + e.getMessage()).build();
-            }
-            catch (ApiException | IOException | InterruptedException | SQLException ex){
-                return Response.status(404).entity("Error: " + ex.getMessage()).build();
-            }
-            
+        } catch (OverQueryLimitException e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(404).entity("Error: "+ ex.getMessage()).build();
+        }
+
     }
-     /**
+
+    /**
      * Method to get link for self.
-     * @param user  object
+     *
+     * @param user object
      * @return URI converted to string
      */
-    private String getUriForSelf (User user){
+    private String getUriForSelf(User user) {
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)
                 .path(Long.toString(user.getId()))
                 .build()
                 .toString();
     }
+
     /**
      * Method to get link for specific user logs.
+     *
      * @param user object
      * @return URI converted to string
      */
-    private String getUriForUsersLogs(User user){
+    private String getUriForUsersLogs(User user) {
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)
                 .path("{userId}/logs")
@@ -142,12 +158,14 @@ public class LocationResource {
                 .build()
                 .toString();
     }
+
     /**
      * Method to get link for specific user log;
+     *
      * @param user object
      * @return URI converted to string
      */
-    private String getUriForUserLog(Log log){
+    private String getUriForUserLog(Log log) {
         return context.getBaseUriBuilder()
                 .path(UsersResource.class)
                 .path("{userId}/logs/{logId}")
